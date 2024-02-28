@@ -17,6 +17,13 @@ public class FirstClientHandler extends ChannelInboundHandlerAdapter {
         ctx.channel().writeAndFlush(buffer);   // 写数据
     }
 
+    @Override
+    public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+        ByteBuf byteBuf = (ByteBuf) msg;
+        System.out.println(new Date() + ": 客户端读到数据 -> "
+                + byteBuf.toString(Charset.forName("utf-8")));
+    }
+
     private ByteBuf getByteBuf(ChannelHandlerContext ctx) {
         ByteBuf buffer = ctx.alloc().buffer();
         byte[] bytes = "hello NettyServer".getBytes(Charset.forName("utf-8"));
