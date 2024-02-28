@@ -8,6 +8,7 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.string.StringDecoder;
+import io.netty.util.AttributeKey;
 import io.netty.util.concurrent.Future;
 import io.netty.util.concurrent.GenericFutureListener;
 
@@ -32,7 +33,7 @@ public class NettyServer {
                         });
                     }
                 });
-        bind(serverBootstrap, 4);
+        bind(serverBootstrap, 8000);
     }
 
     // 自动绑定递增的端口
