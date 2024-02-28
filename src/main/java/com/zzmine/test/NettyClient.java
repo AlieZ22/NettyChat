@@ -23,29 +23,25 @@ public class NettyClient {
                 .handler(new ChannelInitializer<Channel>() {
                     @Override
                     protected void initChannel(Channel channel) throws Exception {
-                        channel.pipeline().addLast(new StringEncoder());
+                        channel.pipeline().addLast(new FirstClientHandler());
                     }
                 });
         connet(bootstrap, "127.0.0.1", 8000, MAX_RETRY);
-//        while (true && channel!=null){
-//            channel.writeAndFlush(new Date() + ": hello server.");
-//            Thread.sleep(2000);
-//        }
     }
 
     // 考虑在网络不好的情况下，自动断线重连
-    private static void connet(Bootstrap bootstrap, String host, int port, int retry){
+    private static void connet(Bootstrap bootstrap, String host, int port, int retry) {
         bootstrap.connect(host, port).addListener(future -> {
-            if (future.isSuccess()){
+            if (future.isSuccess()) {
                 System.out.println("连接成功！");
-            } else if (retry == 0){
+            } else if (retry == 0) {
                 System.err.println("重试次数已用完，放弃连接！");
             } else {
                 // 指数退避的方式依次增加重连间隔
                 int order = (MAX_RETRY - retry) + 1;   // 第几次重连
                 int delay = 1 << order;
                 System.err.println(new Date() + ": 连接失败，第" + order + "次重连......");
-                bootstrap.config().group().schedule(()->connet(bootstrap,host,port,retry-1), delay, TimeUnit.SECONDS);
+                bootstrap.config().group().schedule(() -> connet(bootstrap, host, port, retry - 1), delay, TimeUnit.SECONDS);
             }
         });
     }

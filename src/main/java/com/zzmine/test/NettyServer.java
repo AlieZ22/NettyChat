@@ -24,13 +24,7 @@ public class NettyServer {
                 .childHandler(new ChannelInitializer<NioSocketChannel>() {   // 连接处理逻辑
                     @Override
                     protected void initChannel(NioSocketChannel nioSocketChannel) {
-                        nioSocketChannel.pipeline().addLast(new StringDecoder());
-                        nioSocketChannel.pipeline().addLast(new SimpleChannelInboundHandler<String>() {
-                            @Override
-                            protected void channelRead0(ChannelHandlerContext ctx, String msg) {
-                                System.out.println(msg);
-                            }
-                        });
+                        nioSocketChannel.pipeline().addLast(new FirstServerHandler());
                     }
                 });
         bind(serverBootstrap, 8000);
@@ -42,7 +36,7 @@ public class NettyServer {
                 .addListener(new GenericFutureListener<Future<? super Void>>() {      // 添加端口绑定监听器
                     @Override
                     public void operationComplete(Future<? super Void> future) throws Exception {
-                        if(future.isSuccess()) {
+                        if (future.isSuccess()) {
                             System.out.println("端口 [" + port + " ] 绑定成功！");
                         } else {
                             System.out.println("端口 [" + port + " ] 绑定失败。");
